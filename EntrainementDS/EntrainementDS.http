@@ -1,0 +1,6 @@
+@EntrainementDS_HostAddress = http://localhost:5192
+
+GET {{EntrainementDS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
