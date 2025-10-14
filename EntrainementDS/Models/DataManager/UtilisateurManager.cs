@@ -14,7 +14,9 @@ namespace EntrainementDS.Models.DataManager
         }
         public async Task<IEnumerable<Utilisateur>> GetAllAsync()
         {
-            return await _context.Utilisateurs.Include(u => u.Commandes).ToListAsync();
+            return await _context.Utilisateurs
+                .Include(u => u.Commandes)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Utilisateur?>> GetByIdAsync(int id)

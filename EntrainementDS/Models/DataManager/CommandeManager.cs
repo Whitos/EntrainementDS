@@ -1,9 +1,10 @@
 ﻿using EntrainementDS.Models.EntityFramework;
+using EntrainementDS.Models.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntrainementDS.Models.DataManager
 {
-    public class CommandeManager
+    public class CommandeManager : IDataRepository<Commande, int, string>
     {
         private readonly ApplicationDbContext _context;
         public CommandeManager(ApplicationDbContext context)
@@ -13,7 +14,9 @@ namespace EntrainementDS.Models.DataManager
 
         public async Task<IEnumerable<Commande>> GetAllAsync()
         {
-            return await _context.Commandes.Include(c => c.Utilisateur).ToListAsync();
+            return await _context.Commandes
+                .Include(c => c.Utilisateur)    // Charge la relation avec Utilisateur
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Commande?>> GetByIdAsync(int id)
