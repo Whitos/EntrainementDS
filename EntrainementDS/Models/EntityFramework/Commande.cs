@@ -19,7 +19,7 @@ namespace EntrainementDS.Models.EntityFramework
         public int IdUtilisateur { get; set; }
 
         [Required]
-        [Column("COM_MONTANT", TypeName = "decimal(10,2)")]
+        [Column("COM_MONTANT_INI", TypeName = "decimal(10,2)")]
         public decimal MontantInitial { get; set; }
 
         [Required]
@@ -28,11 +28,11 @@ namespace EntrainementDS.Models.EntityFramework
         public int NombreEcheances { get; set; } = 1;
 
         [Required]
-        [Column("COM_MONTANT", TypeName = "decimal(10,2)")]
+        [Column("COM_MONTANT_TOT", TypeName = "decimal(10,2)")]
         public decimal MontantTotal { get; set; }
 
         [Required]
-        [Column("COM_MONTANT", TypeName = "decimal(10,2)")]
+        [Column("COM_MAJORATION", TypeName = "decimal(10,2)")]
         public decimal Majoration { get; set; }
 
         [Required]

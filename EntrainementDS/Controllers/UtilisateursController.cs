@@ -34,14 +34,8 @@ namespace EntrainementDS.Controllers
         [ActionName("GetById")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateur(int id)
         {
-            var utilisateurList = await _repository.GetByIdAsync(id);
-            var utilisateur = utilisateurList.FirstOrDefault();
-
-            if (utilisateur == null)
-            {
-                return NotFound();
-            }
-
+            var utilisateur = await _repository.GetByIdAsync(id);
+            if (utilisateur == null) return NotFound();
             return Ok(utilisateur);
         }
 

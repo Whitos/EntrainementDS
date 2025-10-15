@@ -38,7 +38,7 @@ namespace EntrainementDS.Models.EntityFramework
 
         [Required]
         [InverseProperty(nameof(Commande.Utilisateur))]
-        public virtual ICollection<Commande> Commandes { get; set; }
+        public virtual ICollection<Commande> Commandes { get; set; } = new List<Commande>();
 
     }
 }

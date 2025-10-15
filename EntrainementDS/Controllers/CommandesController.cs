@@ -35,14 +35,19 @@ namespace EntrainementDS.Controllers
         [ActionName("GetById")]
         public async Task<ActionResult<Commande>> GetCommande(int id)
         {
-            var commandeList = await _repository.GetByIdAsync(id);
-            var commande = commandeList.FirstOrDefault();
+            var commande = await _repository.GetByIdAsync(id);
+            if (commande == null) return NotFound();
 
-            if (commande == null)
-            {
-                return NotFound();
-            }
+            return Ok(commande);
+        }
 
+        // GET: api/commandes/nomArticle
+        [HttpGet("{nomArticle}")]
+        [ActionName("GetByNomArticle")]
+        public async Task<ActionResult<Commande>> GetCommandeByNomArticle(string nomArticle)
+        {
+            var commande = await _repository.GetByKeyAsync(nomArticle);
+            if (commande == null) return NotFound();
             return Ok(commande);
         }
 
