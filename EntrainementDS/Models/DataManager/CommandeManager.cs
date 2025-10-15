@@ -27,9 +27,11 @@ namespace EntrainementDS.Models.DataManager
                 .FirstOrDefaultAsync(u => u.NomArticle == nom);
         }
 
-        public Task<Commande> GetByName(string str)
+        public async Task<Commande?> GetByName(string str)
         {
-            throw new NotImplementedException();
+            return await context.Commandes
+                .Include(c => c.Utilisateur)
+                .FirstOrDefaultAsync(c => c.NomArticle.ToLower().Contains(str.ToLower()));
         }
 
         public async Task AddAsync(Commande entity)
