@@ -4,55 +4,50 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EntrainementDS.Models.DataManager
 {
-    public class CommandeManager : IDataRepository<Commande, int, string>
+    public class CommandeManager(ApplicationDbContext context) : IDataRepository<Commande, int, string>
     {
-        private readonly ApplicationDbContext _context;
-        public CommandeManager(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<IEnumerable<Commande>> GetAllAsync()
         {
-            return await _context.Commandes
+            return await context.Commandes
                 .Include(c => c.Utilisateur)    // Charge la relation avec Utilisateur
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Commande?>> GetByIdAsync(int id)
+        public async Task<Commande?> GetByIdAsync(int id)
         {
-            return await _context.Commandes
+            return await context.Commandes
                 .Include(c => c.Utilisateur)
-                .Where(u => u.IdCommande == id)
-                .ToListAsync();
+                .FirstOrDefaultAsync(c => c.IdCommande == id);
         }
 
         public async Task<Commande?> GetByKeyAsync(string nom)
         {
-            return await _context.Commandes
+            return await context.Commandes
                 .Include(u => u.Utilisateur)
                 .FirstOrDefaultAsync(u => u.NomArticle == nom);
         }
 
+        public Task<Commande> GetByName(string str)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task AddAsync(Commande entity)
         {
-            _context.Commandes.Add(entity);
-            await _context.SaveChangesAsync();
+            await context.Commandes.AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Commande entityToUpdate, Commande entity)
         {
-            entityToUpdate.NomArticle = entity.NomArticle;
-            entityToUpdate.IdUtilisateur = entity.IdUtilisateur;
-            entityToUpdate.Montant = entity.Montant;
-
-            await _context.SaveChangesAsync();
+            context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Commande entity)
         {
-            _context.Commandes.Remove(entity);
-            await _context.SaveChangesAsync();
+            context.Commandes.Remove(entity);
+            await context.SaveChangesAsync();
         }
     }
 }
