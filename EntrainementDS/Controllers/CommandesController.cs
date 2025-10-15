@@ -7,87 +7,83 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EntrainementDS.Models.EntityFramework;
 using EntrainementDS.Models.Repository;
+using AutoMapper;
+using EntrainementDS.Models.DTO;
 
 namespace EntrainementDS.Controllers
 {
-    [Route("api/commandes")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class CommandesController : ControllerBase
+    public class CommandesController(IDataRepository<Commande, int, string> _manager, IMapper _commandeMapper) : ControllerBase
     {
-        private readonly IDataRepository<Commande, int, string> _repository;
-
-
-        public CommandesController(IDataRepository<Commande, int, string> repository)
-        {
-            this._repository = repository;
-        }
 
         // GET: api/commandes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Commande>>> GetCommandes()
+        public async Task<ActionResult<IEnumerable<CommandeDTO>>> GetAll()
         {
-            var commandes = await _repository.GetAllAsync();
-            return Ok(commandes);
+            var commandes = await _manager.GetAllAsync();
+            return new ActionResult<IEnumerable<CommandeDTO>>(_commandeMapper.Map<IEnumerable<CommandeDTO>>(commandes));
         }
 
         // GET: api/commandes/5
         [HttpGet("{id}")]
         [ActionName("GetById")]
-        public async Task<ActionResult<Commande>> GetCommande(int id)
+        public async Task<ActionResult<CommandeDTO>> GetById(int id)
         {
-            var commande = await _repository.GetByIdAsync(id);
-            if (commande == null) return NotFound();
+            var commande = await _manager.GetByIdAsync(id);
+            if (commande is null) return NotFound();
 
-            return Ok(commande);
+            return _commandeMapper.Map<CommandeDTO>(commande);
         }
 
         // GET: api/commandes/nomArticle
         [HttpGet("{nomArticle}")]
         [ActionName("GetByNomArticle")]
-        public async Task<ActionResult<Commande>> GetCommandeByNomArticle(string nomArticle)
+        public async Task<ActionResult<CommandeDTO>> GetByName(string nomArticle)
         {
-            var commande = await _repository.GetByKeyAsync(nomArticle);
-            if (commande == null) return NotFound();
-            return Ok(commande);
+            var commande = await _manager.GetByName(nomArticle);
+            if (commande is null) return NotFound();
+
+            return _commandeMapper.Map<CommandeDTO>(commande);
         }
 
         // PUT: api/commandes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCommande(int id, Commande commande)
+        public async Task<IActionResult> Put(int id, [FromBody] CommandeDTO dto)
         {
-            var existingCommandes = await _repository.GetByIdAsync(id);
-            var commandeToUpdate = existingCommandes.FirstOrDefault();
+            if (id != dto.IdCommande) return BadRequest();
 
-            if (commandeToUpdate == null)
-            {
-                return NotFound();
-            }
+            var toUpdate = await _manager.GetByIdAsync(id);
 
-            await _repository.UpdateAsync(commandeToUpdate, commande);
+            if(toUpdate is null) return NotFound();
+
+            var updated = _commandeMapper.Map<Commande>(dto);
+            await _manager.UpdateAsync(toUpdate, updated);
+
             return NoContent();
         }
 
         // POST: api/commandes
         [HttpPost]
-        public async Task<ActionResult<Commande>> PostCommande(Commande commande)
+        public async Task<ActionResult<CommandeDTO>> Post([FromBody] CommandeDTO dto)
         {
-            await _repository.AddAsync(commande);
-            return CreatedAtAction(nameof(GetCommande), new { id = commande.IdCommande }, commande);
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var entity = _commandeMapper.Map<Commande>(dto);
+            await _manager.AddAsync(entity);
+            return CreatedAtAction("GetById", new { id = entity.IdCommande }, entity);
         }
 
         // DELETE: api/commandes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCommande(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var commandes = await _repository.GetByIdAsync(id);
-            var commande = commandes.FirstOrDefault();
+            var entity = await _manager.GetByIdAsync(id);
 
-            if (commande == null)
-            {
-                return NotFound();
-            }
+            if(entity is null) return NotFound();
 
-            await _repository.DeleteAsync(commande);
+            await _manager.DeleteAsync(entity);
             return NoContent();
         }
     }
