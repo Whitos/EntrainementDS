@@ -83,9 +83,10 @@ namespace EntrainementDS.Migrations
                         .HasColumnType("text")
                         .HasColumnName("UTI_NOM");
 
-                    b.Property<int>("NumeroRue")
+                    b.Property<string>("NumeroRue")
+                        .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("integer")
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("UTI_NUMERORUE");
 
                     b.Property<string>("Prenom")

@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EntrainementDS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251011153157_InitDb")]
-    partial class InitDb
+    [Migration("20251016163128_MigInitDb")]
+    partial class MigInitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,14 +38,26 @@ namespace EntrainementDS.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("UTI_ID");
 
-                    b.Property<int>("Montant")
-                        .HasColumnType("integer")
-                        .HasColumnName("COM_MONTANT");
+                    b.Property<decimal>("Majoration")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("COM_MAJORATION");
+
+                    b.Property<decimal>("MontantInitial")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("COM_MONTANT_INI");
+
+                    b.Property<decimal>("MontantTotal")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("COM_MONTANT_TOT");
 
                     b.Property<string>("NomArticle")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("COM_NOMARTICLE");
+
+                    b.Property<int>("NombreEcheances")
+                        .HasColumnType("integer")
+                        .HasColumnName("COM_NOMBREECHEANCES");
 
                     b.HasKey("IdCommande")
                         .HasName("PK_COM");
@@ -74,9 +86,10 @@ namespace EntrainementDS.Migrations
                         .HasColumnType("text")
                         .HasColumnName("UTI_NOM");
 
-                    b.Property<int>("NumeroRue")
+                    b.Property<string>("NumeroRue")
+                        .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("integer")
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("UTI_NUMERORUE");
 
                     b.Property<string>("Prenom")

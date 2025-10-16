@@ -36,12 +36,14 @@ namespace EntrainementDS.Models.DataManager
 
         public async Task AddAsync(Commande entity)
         {
+            entity.CalculerMontantTotal(); // Calculer le montant total avant d'ajouter
             await context.Commandes.AddAsync(entity);
             await context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Commande entityToUpdate, Commande entity)
         {
+            entity.CalculerMontantTotal(); // Recalculer le montant total avant de mettre à jour
             context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
             await context.SaveChangesAsync();
         }

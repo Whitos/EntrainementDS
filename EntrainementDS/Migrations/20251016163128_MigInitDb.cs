@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EntrainementDS.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationDb : Migration
+    public partial class MigInitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,8 +23,8 @@ namespace EntrainementDS.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UTI_NOM = table.Column<string>(type: "text", nullable: false),
                     UTI_PRENOM = table.Column<string>(type: "text", nullable: false),
-                    UTI_NUMERORUE = table.Column<int>(type: "integer", nullable: false),
-                    UTI_RUE = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    UTI_NUMERORUE = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    UTI_RUE = table.Column<string>(type: "text", nullable: false),
                     UTI_CODEPOSTAL = table.Column<string>(type: "text", nullable: false),
                     UTI_VILLE = table.Column<string>(type: "text", nullable: false)
                 },
@@ -42,7 +42,10 @@ namespace EntrainementDS.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     COM_NOMARTICLE = table.Column<string>(type: "text", nullable: false),
                     UTI_ID = table.Column<int>(type: "integer", nullable: false),
-                    COM_MONTANT = table.Column<int>(type: "integer", nullable: false)
+                    COM_MONTANT_INI = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    COM_NOMBREECHEANCES = table.Column<int>(type: "integer", nullable: false),
+                    COM_MONTANT_TOT = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    COM_MAJORATION = table.Column<decimal>(type: "numeric(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {

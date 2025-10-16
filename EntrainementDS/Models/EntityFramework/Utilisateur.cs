@@ -21,7 +21,7 @@ namespace EntrainementDS.Models.EntityFramework
         [Required]
         [Column("UTI_NUMERORUE")]
         [MaxLength(10)]
-        public int NumeroRue { get; set; }
+        public string NumeroRue { get; set; }
 
         [Required]
         [Column("UTI_RUE")]
