@@ -31,7 +31,7 @@ namespace EntrainementDS.Models.DataManager
         {
             return await context.Commandes
                 .Include(c => c.Utilisateur)
-                .FirstOrDefaultAsync(c => c.NomArticle.ToLower().Contains(str.ToLower()));
+                .FirstOrDefaultAsync(c => c.NomArticle == str);
         }
 
         public async Task AddAsync(Commande entity)
